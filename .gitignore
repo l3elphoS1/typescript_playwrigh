@@ -6,3 +6,7 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 /playwright/.auth/
+
+# My Personal Notes
+Note.md
+playwright-guideline.md

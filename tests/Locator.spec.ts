@@ -11,11 +11,24 @@ import {test, expect} from '@playwright/test'
 // page.locator('css=.legacy-widget >> internal:role=button') // 8. CSS/XPath (last resort)
 
 
-test("Verify Playwright Locators",async({page})=>{
+test.beforeEach(async ({ page }) => {
     await page.goto("https://automate-test-friendly.netlify.app/")
+})
 
+test("Verify Playwright Locators",async({page})=>{
+    // Note: Slashes /.../ in name locator are Regular Expressions (Regex).
+    // They search for a partial match and ignore exact formatting.
+    // /Present/ ignores the exact "⚖️" emoji, the "&nbsp;" spaces, and "Testimony".
+    // It simply looks for any button that contains the word "Present".
     await page.getByRole('button',{name:/Present/}).click()
     await expect(page.getByRole('button',{name:/Present/})).toBeVisible()
-    
-    
+
+})
+
+test("Login Successful",async({page})=>{
+    await page.getByLabel('Username').fill('Furina')
+    await page.getByLabel('Password').fill('PaimonNotEmergencyFood')
+    await page.getByRole('button',{name:/Present/}).click()
+    await expect(page.getByText('Welcome, Hydro Archon! The Court of Fontaine recognizes you.')).toBeVisible()
+
 })
