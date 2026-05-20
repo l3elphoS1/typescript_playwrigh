@@ -19,7 +19,7 @@ export class DialogsPage {
 
     // เปิดหน้าเว็บหลัก
     async goto() {
-        await this.page.goto('https://automate-test-friendly.netlify.app/');
+        await this.page.goto('/');
     }
 
     // เปลี่ยนไปที่ Tab Dialogs

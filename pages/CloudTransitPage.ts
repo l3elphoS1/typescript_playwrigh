@@ -20,7 +20,7 @@ export class CloudTransitPage {
     }
 
     async goto() {
-        await this.page.goto('https://automate-test-friendly.netlify.app/');
+        await this.page.goto('/');
     }
 
     async openTransitTab() {

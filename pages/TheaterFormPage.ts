@@ -54,7 +54,7 @@ export class TheaterFormPage {
 
     // Method: เปิดหน้าเว็บหลัก
     async goto() {
-        await this.page.goto('https://automate-test-friendly.netlify.app/');
+        await this.page.goto('/');
     }
 
     // Method: คลิกเปลี่ยนไปที่หน้า Tab "Forms"
