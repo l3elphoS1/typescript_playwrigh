@@ -13,16 +13,17 @@ export class TheaterFormPage {
     // กฎเหล็ก: ใช้คำว่า 'readonly' เสมอ เพื่อป้องกันไม่ให้โค้ดส่วนอื่นมาแอบเปลี่ยนค่า Locator ของเรา
     // ------------------------------------------------------------------------
     readonly page: Page;
-    readonly usernameInput: Locator;
-    readonly passwordInput: Locator;
-    readonly presentButton: Locator;
-    readonly successMessage: Locator; // เพิ่มสำหรับเช็คตอน Login สำเร็จ
+    readonly fullNameInput: Locator;
+    readonly email: Locator;
+    readonly formSubmitButton: Locator;   // เพิ่มใหม่
+    readonly formMessage: Locator;       // เพิ่มใหม่
     
     // Locators สำหรับ Tab "Forms" (ลดความซ้ำซ้อนจากไฟล์ Assertions.spec.ts)
     readonly formsTabButton: Locator;
     readonly testifyCheckbox: Locator;
     readonly lawfulGoodRadio: Locator;
     readonly chaoticNeutralRadio: Locator;
+    readonly pureChaosRadio: Locator;
     readonly visionDropdown: Locator;
 
     // ------------------------------------------------------------------------
@@ -35,15 +36,16 @@ export class TheaterFormPage {
         this.page = page; // เก็บ page ของ Playwright เอาไว้ใช้ใน Class นี้
         
         // ผูก Locators เข้ากับตัวแปรที่เราประกาศไว้ด้านบน
-        this.usernameInput = page.getByLabel('Username');
-        this.passwordInput = page.getByLabel('Password');
-        this.presentButton = page.getByRole('button', { name: /Present/ });
-        this.successMessage = page.getByText(/Welcome, Hydro Archon/i);
+        this.fullNameInput = page.locator('#form-name');
+        this.email = page.locator('#form-email');
+        this.formSubmitButton = page.locator('#form-submit-btn');
+        this.formMessage = page.locator('#form-message');
 
         this.formsTabButton = page.getByRole('button', { name: /Forms/ });
         this.testifyCheckbox = page.getByLabel(/Testify before the court/i);
         this.lawfulGoodRadio = page.getByLabel(/Lawful Good/i);
         this.chaoticNeutralRadio = page.getByLabel(/Chaotic Neutral/i);
+        this.pureChaosRadio = page.getByLabel(/Pure Chaos/i);
         this.visionDropdown = page.locator('#form-vision');
     }
 
@@ -66,17 +68,18 @@ export class TheaterFormPage {
     // ความเจ๋งของ TypeScript: 
     // - บังคับให้ต้องส่ง username เป็นตัวอักษร (string)
     // - มีเครื่องหมาย '?' หลัง password หมายความว่า "จะใส่หรือไม่ใส่ก็ได้ (Optional)"
-    async fillTestimonyForm(username: string, password?: string) {
-        await this.usernameInput.fill(username);
+    async fillTestimonyForm(username: string, email: string) {
+        await this.fullNameInput.fill(username);
+        await this.email.fill(email);
         
-        if (password) { // ถ้ามีการส่ง password มา ค่อยสั่งกรอก
-            await this.passwordInput.fill(password);
+        if (email) { // ถ้ามีการส่ง password มา ค่อยสั่งกรอก
+            await this.email.fill(email);
         }
     }
 
     // Method: กดยืนยันปุ่ม Present
     async submitForm() {
-        await this.presentButton.click();
+        await this.formSubmitButton.click();
     }
 
     // ------------------------------------------------------------------------
@@ -84,12 +87,14 @@ export class TheaterFormPage {
     // หน้าที่: ลดความซ้ำซ้อน (Redundancy) แทนที่จะต้องเขียนคำสั่งคลิก 3 บรรทัดในไฟล์ Test
     // เราย่อให้เหลือการเรียกใช้ Method นี้แค่บรรทัดเดียว!
     // ------------------------------------------------------------------------
-    async selectAlignmentAndVision(alignment: 'Lawful Good' | 'Chaotic Neutral', vision: string) {
-        // TypeScript จะล็อคให้พิมพ์ได้แค่ 'Lawful Good' หรือ 'Chaotic Neutral' เท่านั้น ป้องกันการพิมพ์ผิด!
+    async selectAlignmentAndVision(alignment: 'Lawful Good' | 'Chaotic Neutral' | 'Pure Chaos', vision: string) {
+        // TypeScript จะล็อคให้พิมพ์ได้แค่ 'Lawful Good', 'Chaotic Neutral' หรือ 'Pure Chaos' เท่านั้น ป้องกันการพิมพ์ผิด!
         if (alignment === 'Lawful Good') {
             await this.lawfulGoodRadio.check();
-        } else {
+        } else if (alignment === 'Chaotic Neutral') {
             await this.chaoticNeutralRadio.check();
+        } else if (alignment === 'Pure Chaos') {
+            await this.pureChaosRadio.check();
         }
         
         // เลือก Dropdown ตามค่าที่ส่งมา (เช่น 'hydro', 'pyro')

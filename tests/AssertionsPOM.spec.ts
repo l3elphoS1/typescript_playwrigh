@@ -19,13 +19,13 @@ test("Verify Element State Assertions using POM", async ({ page }) => {
     const theaterPage = new TheaterFormPage(page);
 
     // 3. ตรวจสอบว่า Element ปรากฏบนจอ (Visible)
-    await expect(theaterPage.usernameInput).toBeVisible();
+    await expect(theaterPage.fullNameInput).toBeVisible();
 
     // 4. ตรวจสอบว่า Element สามารถพิมพ์/กดได้ (Enabled)
-    await expect(theaterPage.usernameInput).toBeEnabled();
+    await expect(theaterPage.fullNameInput).toBeEnabled();
 
     // 5. ตรวจสอบว่ามีช่องว่างเปล่าอยู่ (ไม่มีข้อความ)
-    await expect(theaterPage.usernameInput).toBeEmpty();
+    await expect(theaterPage.fullNameInput).toBeEmpty();
 
     // ถ้ากดปุ่ม Present โดยไม่กรอกอะไรเลย อาจจะมี Error ขึ้น
     await theaterPage.submitForm();
@@ -35,11 +35,11 @@ test("Verify Text and Attribute Assertions using POM", async ({ page }) => {
     const theaterPage = new TheaterFormPage(page);
 
     // 8. ตรวจสอบว่า "มีคำนี้ซ่อนอยู่" ในข้อความนั้นๆ (Contain Text) 
-    await expect(theaterPage.presentButton).toContainText('Present');
-    await expect(theaterPage.presentButton).toContainText('Testimony');
+    await expect(theaterPage.formSubmitButton).toContainText('Present');
+    await expect(theaterPage.formSubmitButton).toContainText('Testimony');
 
     // 9. ตรวจสอบ Attribute ต่างๆ เช่น id, type, src ของภาพ
-    await expect(theaterPage.passwordInput).toHaveAttribute('type', 'password');
+    await expect(theaterPage.email).toHaveAttribute('type', 'email');
 });
 
 
@@ -51,13 +51,13 @@ test("Verify user input using POM", async ({ page }) => {
     // await usernameInput.fill('Furina');
     
     // หลังแก้ (ใช้ POM):
-    await theaterPage.fillTestimonyForm('Furina');
+    await theaterPage.fillTestimonyForm('Furina', 'furina@fontaine.com');
     
     // Assertion (การตรวจสอบ) ยังคงอยู่ในไฟล์ Test
-    await expect(theaterPage.usernameInput).toHaveValue('Furina');
+    await expect(theaterPage.fullNameInput).toHaveValue('Furina');
     
-    await theaterPage.usernameInput.clear();
-    await expect(theaterPage.usernameInput).toHaveValue('');
+    await theaterPage.fullNameInput.clear();
+    await expect(theaterPage.fullNameInput).toHaveValue('');
 });
 
 test("Verify Checkbox using POM", async ({ page }) => {
